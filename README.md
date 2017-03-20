@@ -14,82 +14,61 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 [image1]: ./output_images/HOG.png
 [image2]: ./output_images/HOG2.png
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
+[image3]: ./output_images/SVM.png
+[image4]: .//output_images/test3.png
+[image5]: ./output_images/final.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+
 
 ### Histogram of Oriented Gradients (HOG)
+The histogram of oriented gradients (HOG) is a feature descriptor popularly used in computer vision, particularly on object detection field. This technique, basically counts occurrences of gradient orientation in localized portions of an image. The function `skimage.hog()` was used and tested in this stage using different color spaces and different parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  Random vehicle and non-vehicle images were picked from data sets and then displayed in order to decided the best `skimage.hog()`  parameters for the project. The parameters were selected by experimentation and following the recommendations of this [blog](https://chatbotslife.com/vehicle-detection-and-tracking-using-computer-vision-baea4df65906#.ew12hhpj9).
 
-#### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
-
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
-
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
+Here is an example using the `RGB` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(4, 4)` and `cells_per_block=(1, 1)`:
 
 ![alt text][image1]
+
+Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`:
+
 ![alt text][image2]
 
-#### 2. Explain how you settled on your final choice of HOG parameters.
+The code for this step is contained in the third and fourth code cell of the IPython notebook named [Training_SVM](Training_SVM.ipynb). 
 
-I tried various combinations of parameters and...
 
-#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### Support Vector Machine Classifier
 
-I trained a linear SVM using...
+The vehicle and non-vehicle datasets provided were explored with the aim of verifying if they are balanced. Udacity provided 8.792 images of vehicles and 8.968 images of non-vehicles of 64x64 pixels each, from  GTI vehicle image database and the KITTI vision benchmark suite.  
 
-### Sliding Window Search
+A Linear Support Vector Machine based on the `SVC` function from the `scikit-learn` machine learning package. HOG features with the following parameters (`color_space=YCrCb`, `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`) were chosen to train a SVM with linear kernel. With these settings a `0.9778` of accuracy was obtained. The feature extraction stage were performed using the `extract_features()` function provided on the lectures. The data was scaled and normalized using the `StandardScaler()` from `sklearn.preprocessing` package.  
 
-#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
-
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+The code for this step is contained in code cells from four to six of the IPython notebook named [Training_SVM](Training_SVM.ipynb). 
 
 ![alt text][image3]
 
-#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+### Sliding Window Search
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+A basic sliding window search was implemented using the `slide_window()` and `search_windows()` in order to detect the areas where vehicles supposed to be on each frame of the video (the `search_windows()` takes advantage of the pre trained SVM to detect vehicles). A window size of `96x96` pixels was chosen based on experimentation. The area of the sliding window search was limited to `x_start_stop=(200, 1180)` and `y_start_stop=(400, 700)` and the overlapping percentage was fixed on 0.7 based on experimentation. 
+
+In order to avoid false positives, positive vehicle detections are recorded in each frame of the video and a heatmap was created and then thresholded to identify vehicle positions.  The `scipy.ndimage.measurements.label()` was used to identify individual blobs in the heatmap assuming that each blob corresponded to a vehicle.  Then, bounding boxes are drawn to cover the area of each blob detected.  
+
+The code for this step is contained in the third and seventh code cell of the IPython notebook named [P5](P5.ipynb). 
 
 ![alt text][image4]
----
 
-### Video Implementation
-
-#### 1. A youtube video processed with the algorithm are shown below:
-
-[![Alt text for your video](https://img.youtube.com/vi/SJmWCHr21C8/0.jpg)](https://www.youtube.com/watch?v=Y30C_FkGIHs)
-
-
-#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
-
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are six frames and their corresponding heatmaps:
+An image of the final implementation is shown below:
 
 ![alt text][image5]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
+### Video Implementation
+The code for this step is contained in the code cells 10 and 11 of the IPython notebook named [P5](P5.ipynb), on the function named `pipeline()`. 
 
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
+#### A youtube video processed with the algorithm are shown below:
 
-
+[![Alt text for your video](https://img.youtube.com/vi/SJmWCHr21C8/0.jpg)](https://www.youtube.com/watch?v=Y30C_FkGIHs)
 
 ---
 
 ### Discussion
-
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
