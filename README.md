@@ -49,7 +49,7 @@ The code for this step is contained in code cells from four to six of the IPytho
 
 A basic sliding window search was implemented using the `slide_window()` and `search_windows()` in order to detect the areas where vehicles supposed to be on each frame of the video (the `search_windows()` takes advantage of the pre trained SVM to detect vehicles). A window size of `96x96` pixels was chosen based on experimentation. The area of the sliding window search was limited to `x_start_stop=(200, 1180)` and `y_start_stop=(400, 700)` and the overlapping percentage was fixed on 0.7 based on experimentation. 
 
-In order to avoid false positives, positive vehicle detections are recorded in each frame of the video and a heatmap was created and then thresholded to identify vehicle positions.  The `scipy.ndimage.measurements.label()` was used to identify individual blobs in the heatmap assuming that each blob corresponded to a vehicle.  Then, bounding boxes are drawn to cover the area of each blob detected.  
+In order to avoid false positives, positive vehicle detections are recorded in each frame of the video and a heatmap was created and then thresholded to identify vehicle positions.  The `scipy.ndimage.measurements.label()` was used to identify individual blobs in the heatmap assuming that each blob corresponded to a vehicle.  Then, bounding boxes are drawn to cover the area of each blob detected. Also, a class named `HotWindows()`, a queue of lists of bounding boxes were taken from this [project](https://github.com/georgesung/vehicle_detection_hog_svm/blob/master/HotWindows.py).
 
 The code for this step is contained in the third and seventh code cell of the IPython notebook named [P5](P5.ipynb). 
 
