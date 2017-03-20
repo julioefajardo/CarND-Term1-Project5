@@ -15,8 +15,8 @@ The goals / steps of this project are the following:
 [image1]: ./output_images/HOG.png
 [image2]: ./output_images/HOG2.png
 [image3]: ./output_images/SVM.png
-[image4]: .//output_images/test3.png
-[image5]: ./output_images/final.png
+[image4]: ./output_images/test3.png
+[image5]: ./output_images/Final.png
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
 
