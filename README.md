@@ -64,7 +64,7 @@ The code for this step is contained in the code cells 10 and 11 of the IPython n
 
 #### A youtube video processed with the algorithm are shown below:
 
-[![Alt text for your video](https://img.youtube.com/vi/SJmWCHr21C8/0.jpg)](https://www.youtube.com/watch?v=Y30C_FkGIHs)
+[![Alt text for your video](https://img.youtube.com/vi/Y30C_FkGIHs/0.jpg)](https://www.youtube.com/watch?v=Y30C_FkGIHs)
 
 ---
 
